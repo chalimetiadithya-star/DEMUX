@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     // -----------------------------------------------------
-    // Global Chart.js Framer Dark System Theme
+    // Global Chart.js Professional Multi-Color Theme
     // -----------------------------------------------------
     if (typeof Chart !== 'undefined') {
-        Chart.defaults.color = '#969694';
-        Chart.defaults.borderColor = '#2a2a27';
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = '#1e293b';
         Chart.defaults.font.family = "'Inter', sans-serif";
     }
 
@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingSection = document.getElementById('loading-section');
         const uploadSection = document.getElementById('upload-section');
 
-        // Drag and Drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropzone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
         });
@@ -51,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fileInput.files.length > 0) {
                 const fileName = fileInput.files[0].name;
                 if (fileName.endsWith('.csv')) {
-                    dropzoneText.textContent = `Selected: ${fileName}`;
-                    dropzoneSubtext.textContent = 'Click "ANALYZE DATASET NOW" to proceed.';
+                    dropzoneText.textContent = `Selected Dataset: ${fileName}`;
+                    dropzoneSubtext.textContent = 'Click "RUN CHURN PREDICTION PIPELINE" to execute ML analysis.';
                     dropzone.classList.add('has-file');
                     analyzeBtn.disabled = false;
                 } else {
@@ -123,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -----------------------------------------------------
-    // 2. Dashboard Logic & Chart Rendering
+    // 2. Dashboard Logic & Multi-Color Chart Rendering
     // -----------------------------------------------------
     const actionChartCanvas = document.getElementById('actionChart');
     if (actionChartCanvas) {
@@ -133,16 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderDashboard(data) {
         // Stats
         document.getElementById('churn-percentage').textContent = `${data.churn_percentage}%`;
-        document.getElementById('churn-count').textContent = `${data.at_risk_count} / ${data.total_customers} customers flagged`;
+        document.getElementById('churn-count').textContent = `${data.at_risk_count} / ${data.total_customers} accounts flagged`;
 
         const riskPill = document.getElementById('risk-status-pill');
         if (riskPill) {
             if (data.churn_percentage > 30) {
                 riskPill.textContent = 'HIGH RISK ALERT';
-                riskPill.className = 'stat-pill high';
+                riskPill.className = 'stat-pill rose';
             } else {
                 riskPill.textContent = 'HEALTHY METRICS';
-                riskPill.className = 'stat-pill normal';
+                riskPill.className = 'stat-pill emerald';
             }
         }
         
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         actionList.innerHTML = '';
         if (data.action_counts && Object.keys(data.action_counts).length > 0) {
             for (const [action, count] of Object.entries(data.action_counts)) {
-                actionList.innerHTML += `<li><strong>${action} Playbook:</strong> Flagged for ${count} high-risk user accounts</li>`;
+                actionList.innerHTML += `<li><strong>${action} Playbook:</strong> Assigned to ${count} high-risk user accounts</li>`;
             }
         } else {
             actionList.innerHTML = '<li>No urgent interventions required.</li>';
@@ -178,32 +177,37 @@ document.addEventListener('DOMContentLoaded', () => {
             reliabilityAlert.classList.remove('hidden');
         }
 
-        renderCharts(data);
+        renderMultiColorCharts(data);
     }
 
-    function renderCharts(data) {
-        // 1. Action Breakdown Doughnut
+    function renderMultiColorCharts(data) {
+        // 1. Multi-Color Action Breakdown Doughnut Chart
         new Chart(document.getElementById('actionChart').getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: Object.keys(data.action_counts || {}),
                 datasets: [{
                     data: Object.values(data.action_counts || {}),
-                    backgroundColor: ['#c6fd50', '#a855f7', '#38bdf8', '#ff5964'],
-                    borderWidth: 2,
-                    borderColor: '#1c1d1a'
+                    backgroundColor: [
+                        '#8b5cf6', // Violet
+                        '#06b6d4', // Cyan
+                        '#f43f5e', // Rose Red
+                        '#f59e0b'  // Amber Gold
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#121826'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom', labels: { padding: 20, font: { weight: '600' } } }
+                    legend: { position: 'bottom', labels: { padding: 18, font: { weight: '600', size: 12 } } }
                 }
             }
         });
 
-        // 2. Churn Reasons Bar Chart
+        // 2. Distinct Multi-Color Churn Drivers Bar Chart
         const reasonCounts = {};
         if (data.high_risk_users) {
             data.high_risk_users.forEach(user => {
@@ -211,18 +215,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 reasonCounts[r] = (reasonCounts[r] || 0) + 1;
             });
         }
+
+        const barLabels = Object.keys(reasonCounts);
+        const barColors = barLabels.map(label => {
+            if (label.includes('Frustrated') || label.includes('Support')) return '#f43f5e'; // Rose
+            if (label.includes('Price') || label.includes('Billing')) return '#f59e0b';     // Amber
+            if (label.includes('Engagement') || label.includes('Low')) return '#8b5cf6';    // Violet
+            return '#06b6d4'; // Cyan default
+        });
         
         new Chart(document.getElementById('reasonsChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: Object.keys(reasonCounts),
+                labels: barLabels,
                 datasets: [{
                     label: 'Flagged Accounts',
                     data: Object.values(reasonCounts),
-                    backgroundColor: '#c6fd50',
-                    borderRadius: 6,
-                    borderWidth: 1,
-                    borderColor: '#131311'
+                    backgroundColor: barColors,
+                    borderRadius: 8,
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -230,13 +241,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: '#2a2a27' }, ticks: { precision: 0 } },
+                    y: { beginAtZero: true, grid: { color: '#1e293b' }, ticks: { precision: 0 } },
                     x: { grid: { display: false } }
                 }
             }
         });
 
-        // 3. Monthly Churn Trend Line Chart
+        // 3. Glowing Gradient Line Chart (Monthly Churn Trend vs. Tenure)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        const lineGradient = ctxTrend.createLinearGradient(0, 0, 0, 250);
+        lineGradient.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
+        lineGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
         let cohorts = {
             'Month 1': 0, 'Month 2': 0, 'Month 3': 0, 'Month 4': 0,
             'Month 5': 0, 'Month 6': 0, 'Month 7': 0, 'Month 8': 0,
@@ -261,20 +277,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        new Chart(document.getElementById('trendChart').getContext('2d'), {
+        new Chart(ctxTrend, {
             type: 'line',
             data: {
                 labels: Object.keys(cohorts),
                 datasets: [{
                     label: 'At-Risk Accounts',
                     data: Object.values(cohorts),
-                    borderColor: '#c6fd50',
+                    borderColor: '#06b6d4',
                     borderWidth: 3,
-                    backgroundColor: 'rgba(198, 253, 80, 0.1)',
+                    backgroundColor: lineGradient,
                     fill: true,
-                    tension: 0.3,
-                    pointBackgroundColor: '#c6fd50',
-                    pointBorderColor: '#131311',
+                    tension: 0.4,
+                    pointBackgroundColor: '#8b5cf6',
+                    pointBorderColor: '#0a0e17',
                     pointBorderWidth: 2,
                     pointRadius: 6,
                     pointHoverRadius: 9
@@ -285,15 +301,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: '#2a2a27' }, ticks: { precision: 0 } },
-                    x: { grid: { color: '#2a2a27' } }
+                    y: { beginAtZero: true, grid: { color: '#1e293b' }, ticks: { precision: 0 } },
+                    x: { grid: { color: '#1e293b' } }
                 }
             }
         });
     }
 
     // -----------------------------------------------------
-    // 3. At-Risk Customers Page & Real-Time Filters
+    // 3. At-Risk Customers Page & Filters
     // -----------------------------------------------------
     const usersTable = document.getElementById('high-risk-users');
     let rawCustomersList = [];
@@ -306,7 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCustomersTable();
         });
 
-        // Search Input Event
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
@@ -315,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Filter Pill Buttons Event
         const filterBtns = document.querySelectorAll('.filter-pill-btn');
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -326,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // CSV Export
         const exportBtn = document.getElementById('export-btn');
         if (exportBtn) {
             exportBtn.addEventListener('click', () => {
@@ -355,7 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
         usersTable.innerHTML = '';
 
         let filtered = rawCustomersList.filter(user => {
-            // Check category filter
             if (activeFilterTerm !== 'all') {
                 const reasonStr = (user.top_reason || '').toLowerCase();
                 const actionStr = (user.recommended_action || '').toLowerCase();
@@ -364,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return false;
                 }
             }
-            // Check text search query
             if (activeSearchQuery) {
                 const searchStr = `${user.user_id} ${user.top_reason} ${user.recommended_action}`.toLowerCase();
                 if (!searchStr.includes(activeSearchQuery)) {
@@ -375,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filtered.length === 0) {
-            usersTable.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted-dark); padding: 32px;">No matching at-risk customer accounts found.</td></tr>`;
+            usersTable.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px;">No matching at-risk customer accounts found.</td></tr>`;
             return;
         }
 
@@ -383,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             const fakeName = 'User ' + user.user_id.split('_')[1];
             const fakeEmail = user.user_id.toLowerCase() + '@saasapp.com';
-            const avatarUrl = `https://ui-avatars.com/api/?name=${fakeName}&background=c6fd50&color=131311&bold=true&rounded=true&size=44`;
+            const avatarUrl = `https://ui-avatars.com/api/?name=${fakeName}&background=6366f1&color=fff&bold=true&rounded=true&size=42`;
 
             const riskPercent = Math.round(user.churn_probability * 100);
             let riskClass = riskPercent >= 80 ? 'high' : 'medium';
@@ -391,7 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const daysAgo = Math.max(1, Math.floor(Math.random() * 18));
             const reasons = (user.top_reason || 'Unknown').split('/');
-            const pillsHtml = reasons.map(r => `<span class="reason-tag">${r}</span>`).join(' ');
+            const pillsHtml = reasons.map((r, idx) => {
+                const tagClass = idx % 2 === 0 ? 'reason-tag-cyan' : 'reason-tag-purple';
+                return `<span class="${tagClass}">${r}</span>`;
+            }).join(' ');
 
             let actionText = user.recommended_action;
             let actionIcon = '💬';
@@ -410,14 +424,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </td>
                 <td>
-                    <div class="risk-badge-box ${riskClass}">
+                    <div class="risk-badge-pro ${riskClass}">
                         <span>${riskPercent}%</span>
                         <span>• ${riskLabel}</span>
                     </div>
                 </td>
                 <td>
-                    <div style="font-weight: 700; color: var(--text-light);">${daysAgo} days ago</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted-dark);">Signup: ${user.days_since_signup || 120} days ago</div>
+                    <div style="font-weight: 700; color: var(--text-main);">${daysAgo} days ago</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Signup: ${user.days_since_signup || 120} days ago</div>
                 </td>
                 <td>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
@@ -425,14 +439,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </td>
                 <td>
-                    <button class="action-trigger-btn" data-user="${user.user_id}" data-reason="${user.top_reason}">
+                    <button class="action-trigger-btn-pro" data-user="${user.user_id}" data-reason="${user.top_reason}">
                         <span>${actionIcon}</span>
                         <span>${actionText}</span>
                     </button>
                 </td>
             `;
 
-            const actionBtn = tr.querySelector('.action-trigger-btn');
+            const actionBtn = tr.querySelector('.action-trigger-btn-pro');
             actionBtn.onclick = () => {
                 window.openModal(user.user_id, user.top_reason);
             };
@@ -442,14 +456,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -----------------------------------------------------
-    // Helper: Fetch Data from API
+    // Helper API Fetcher
     // -----------------------------------------------------
     async function fetchDataAndRender(renderFunction) {
         try {
             const res = await fetch('/api/data');
             if (!res.ok) {
                 if (res.status === 404) {
-                    // Alert once and redirect
                     window.location.href = '/';
                 } else {
                     throw new Error('Failed to load telemetry API.');
@@ -464,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -----------------------------------------------------
-    // Modal AI Voice Call Simulator Logic
+    // Modal AI Voice Call Simulator
     // -----------------------------------------------------
     const modal = document.getElementById('call-modal');
     const closeModalBtn = document.getElementById('close-modal');
@@ -495,9 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.openModal = function(userId, reason) {
         modalTranscript.innerHTML = `
             <div style="background-color: var(--bg-dark); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-dark-strong); margin-bottom: 20px;">
-                <div style="font-size: 0.75rem; color: var(--lime-accent); font-weight: 800; text-transform: uppercase;">OUTBOUND VOICE CALL ACTIVE</div>
-                <div style="font-weight: 700; font-size: 1rem; color: var(--text-light); margin-top: 2px;">Account ID: ${userId}</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted-dark);">Primary Risk Trigger: ${reason || 'Support Complaints / Low Activity'}</div>
+                <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 800; text-transform: uppercase;">OUTBOUND VOICE CALL ACTIVE</div>
+                <div style="font-weight: 700; font-size: 1rem; color: var(--text-main); margin-top: 2px;">Account ID: ${userId}</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Primary Risk Trigger: ${reason || 'Support Complaints / Low Activity'}</div>
             </div>
         `;
 
