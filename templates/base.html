@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Churn Prediction Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">ChurnAI</div>
+        <div class="nav-links">
+            <a href="/" class="nav-link {% if active_page == 'upload' or not active_page %}active{% endif %}">Upload Data</a>
+            <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="/customers" class="nav-link {% if active_page == 'customers' %}active{% endif %}">At-Risk Customers</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Modal Structure (Shared) -->
+    <div id="call-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Simulated AI Voice Agent</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-transcript">
+                <!-- Transcript injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

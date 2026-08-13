@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="header">
+    <h1>Top At-Risk Customers</h1>
+    <p>Detailed list of customers with high churn probability and recommended interventions.</p>
+</header>
+
+<section class="results-section" id="results-section">
+    <div class="card table-card full-width" style="margin-bottom: 24px;">
+        <div class="table-container">
+            <table class="styled-table premium-table">
+                <thead>
+                    <tr>
+                        <th>USER</th>
+                        <th>RISK SCORE</th>
+                        <th>LAST ACTIVE</th>
+                        <th>REASON(S)</th>
+                        <th>RECOMMENDED ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="high-risk-users">
+                    <!-- High risk users injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button class="btn primary-btn" id="export-btn">Export Action List (.csv)</button>
+    </div>
+</section>
+{% endblock %}

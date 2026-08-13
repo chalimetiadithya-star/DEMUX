@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="header">
+    <h1>Visual Analytics Dashboard</h1>
+    <p>Macro-level insights and model performance metrics.</p>
+</header>
+
+<section class="results-section" id="results-section">
+    <div class="summary-cards">
+        <div class="card stat-card">
+            <h3>Overall Churn Risk</h3>
+            <div class="stat-value" id="churn-percentage">--%</div>
+            <div class="stat-subtext" id="churn-count">-- / -- users</div>
+        </div>
+        <div class="card stat-card">
+            <h3>Model Accuracy</h3>
+            <div class="stat-value" id="model-accuracy">--%</div>
+        </div>
+        <div class="card stat-card">
+            <h3>Model AUC</h3>
+            <div class="stat-value" id="model-auc">--</div>
+        </div>
+    </div>
+
+    <!-- Visual Analytics Section -->
+    <div class="charts-grid">
+        <div class="card chart-card">
+            <h2>Action Breakdown</h2>
+            <div class="chart-container">
+                <canvas id="actionChart"></canvas>
+            </div>
+        </div>
+        <div class="card chart-card">
+            <h2>Top Churn Drivers</h2>
+            <div class="chart-container">
+                <canvas id="reasonsChart"></canvas>
+            </div>
+        </div>
+        <div class="card chart-card full-width">
+            <h2>Monthly Churn Trend vs. Tenure</h2>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-grid">
+        <div class="card insights-card full-width">
+            <h2>Action Plan Breakdown</h2>
+            <ul id="action-list" class="styled-list">
+                <!-- Action breakdown will be injected here -->
+            </ul>
+            
+            <h2 style="margin-top: 24px;">Key Insights</h2>
+            <ul id="insights-list" class="styled-list">
+                <!-- Insights will be injected here -->
+            </ul>
+            
+            <div class="reliability-alert hidden" id="reliability-note">
+                <!-- Reliability note injected here -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
