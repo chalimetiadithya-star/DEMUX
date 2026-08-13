@@ -1,66 +1,103 @@
 {% extends "base.html" %}
 
 {% block content %}
-<header class="header">
-    <h1>Visual Analytics Dashboard</h1>
-    <p>Macro-level insights and model performance metrics.</p>
-</header>
-
-<section class="results-section" id="results-section">
-    <div class="summary-cards">
-        <div class="card stat-card">
-            <h3>Overall Churn Risk</h3>
-            <div class="stat-value" id="churn-percentage">--%</div>
-            <div class="stat-subtext" id="churn-count">-- / -- users</div>
-        </div>
-        <div class="card stat-card">
-            <h3>Model Accuracy</h3>
-            <div class="stat-value" id="model-accuracy">--%</div>
-        </div>
-        <div class="card stat-card">
-            <h3>Model AUC</h3>
-            <div class="stat-value" id="model-auc">--</div>
-        </div>
+<!-- Dashboard Header -->
+<section class="hero-section" style="margin-bottom: 32px;">
+    <div class="hero-pill-badge">
+        <span>📊 MACRO METRICS & MODEL EVALUATION</span>
     </div>
-
-    <!-- Visual Analytics Section -->
-    <div class="charts-grid">
-        <div class="card chart-card">
-            <h2>Action Breakdown</h2>
-            <div class="chart-container">
-                <canvas id="actionChart"></canvas>
-            </div>
-        </div>
-        <div class="card chart-card">
-            <h2>Top Churn Drivers</h2>
-            <div class="chart-container">
-                <canvas id="reasonsChart"></canvas>
-            </div>
-        </div>
-        <div class="card chart-card full-width">
-            <h2>Monthly Churn Trend vs. Tenure</h2>
-            <div class="chart-container">
-                <canvas id="trendChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="results-grid">
-        <div class="card insights-card full-width">
-            <h2>Action Plan Breakdown</h2>
-            <ul id="action-list" class="styled-list">
-                <!-- Action breakdown will be injected here -->
-            </ul>
-            
-            <h2 style="margin-top: 24px;">Key Insights</h2>
-            <ul id="insights-list" class="styled-list">
-                <!-- Insights will be injected here -->
-            </ul>
-            
-            <div class="reliability-alert hidden" id="reliability-note">
-                <!-- Reliability note injected here -->
-            </div>
-        </div>
-    </div>
+    <h1 class="hero-title" style="font-size: 2.75rem;">
+        Analytics Dashboard
+    </h1>
+    <p class="hero-subtitle">
+        Real-time telemetry breakdown, model performance scores, and high-priority retention action plans.
+    </p>
 </section>
+
+<!-- Top Metrics Hero Grid with Professional Multi-Colors -->
+<div class="metrics-hero-grid">
+    <div class="stat-card-pro card-risk">
+        <div class="stat-header">
+            <span class="stat-label">Overall Churn Risk</span>
+            <span class="stat-pill rose" id="risk-status-pill">RISK ALERT</span>
+        </div>
+        <div class="stat-main-number rose" id="churn-percentage">--%</div>
+        <div class="stat-subinfo" id="churn-count">-- / -- accounts flagged</div>
+    </div>
+
+    <div class="stat-card-pro card-accuracy">
+        <div class="stat-header">
+            <span class="stat-label">Model Accuracy</span>
+            <span class="stat-pill emerald">CLASSIFIER</span>
+        </div>
+        <div class="stat-main-number emerald" id="model-accuracy">--%</div>
+        <div class="stat-subinfo">Supervised Random Forest (80/20 split)</div>
+    </div>
+
+    <div class="stat-card-pro card-auc">
+        <div class="stat-header">
+            <span class="stat-label">Model ROC-AUC Score</span>
+            <span class="stat-pill amber">RELIABILITY</span>
+        </div>
+        <div class="stat-main-number amber" id="model-auc">--</div>
+        <div class="stat-subinfo">Area under ROC curve score</div>
+    </div>
+</div>
+
+<!-- Charts Layout Grid -->
+<div class="charts-layout">
+    <div class="chart-card-pro">
+        <div class="chart-card-header">
+            <h3 class="chart-card-title">
+                <span>🍩 Prescriptive Action Distribution</span>
+            </h3>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="actionChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card-pro">
+        <div class="chart-card-header">
+            <h3 class="chart-card-title">
+                <span>📊 Primary Churn Drivers</span>
+            </h3>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="reasonsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card-pro full-col">
+        <div class="chart-card-header">
+            <h3 class="chart-card-title">
+                <span>📈 Churn Risk Cohort Trend vs. Tenure</span>
+            </h3>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Prescriptive Action Plan & Key Insights -->
+<div class="insights-panel">
+    <h3 class="section-subheading">
+        <span>⚡ Prescriptive Action Plan Breakdown</span>
+    </h3>
+    <ul id="action-list" class="pro-list">
+        <!-- Injected dynamically by app.js -->
+    </ul>
+
+    <h3 class="section-subheading" style="margin-top: 32px;">
+        <span>💡 AI Key Behavioral Insights</span>
+    </h3>
+    <ul id="insights-list" class="pro-list">
+        <!-- Injected dynamically by app.js -->
+    </ul>
+
+    <div class="alert-callout hidden" id="reliability-note">
+        <!-- Reliability alerts injected dynamically -->
+    </div>
+</div>
 {% endblock %}

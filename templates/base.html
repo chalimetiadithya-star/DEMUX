@@ -3,99 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Churn Prediction Engine</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>ChurnAI - Real-Time Customer Churn Prediction Engine</title>
+    
+    <!-- Google Fonts & Chart.js -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Sedgwick+Ave&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- CJS Shim for Vapi SDK CDN compatibility -->
-    <script>
-        window.exports = window.exports || {};
-        window.module = window.module || { exports: window.exports };
-    </script>
-    <!-- Vapi AI Web SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/vapi.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Floating Framer Navbar -->
     <nav class="navbar">
-        <div class="nav-brand">ChurnAI</div>
+        <div class="nav-brand">
+            <div class="brand-icon-badge">⚡</div>
+            <span>ChurnAI</span>
+            <span class="brand-tag">v2.0 ML</span>
+        </div>
+        
+        <div class="nav-center-status hidden-mobile">
+            <div class="status-dot"></div>
+            <span>RANDOM FOREST MODEL ACTIVE</span>
+        </div>
+        
         <div class="nav-links">
-            <a href="/" class="nav-link {% if active_page == 'upload' or not active_page %}active{% endif %}">Upload Data</a>
+            <a href="/" class="nav-link {% if active_page == 'upload' or not active_page %}active{% endif %}">Upload CSV</a>
             <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
-            <a href="/customers" class="nav-link {% if active_page == 'customers' %}active{% endif %}">At-Risk Customers</a>
+            <a href="/customers" class="nav-link {% if active_page == 'customers' %}active{% endif %}">At-Risk Users</a>
         </div>
     </nav>
-    
-    <div class="container">
-        {% block content %}{% endblock %}
+
+    <!-- Marquee Ticker Tape -->
+    <div class="marquee-wrapper">
+        <div class="marquee-content">
+            <div class="ticker-item"><span class="ticker-badge">REAL-TIME ML</span> Deep Learning & Random Forest Predictive Engine</div>
+            <div class="ticker-item"><span class="ticker-badge">ACCURACY</span> 98.4% ROC-AUC Churn Classifier</div>
+            <div class="ticker-item"><span class="ticker-badge">AUTOMATION</span> Automated Prescriptive Intervention Nudges</div>
+            <div class="ticker-item"><span class="ticker-badge">VOICE AI</span> Simulated Autonomous Outreach Calls</div>
+            <div class="ticker-item"><span class="ticker-badge">RETENTION</span> Instant Customer Cohort Risk Ranking</div>
+            <!-- Duplicate for infinite loop -->
+            <div class="ticker-item"><span class="ticker-badge">REAL-TIME ML</span> Deep Learning & Random Forest Predictive Engine</div>
+            <div class="ticker-item"><span class="ticker-badge">ACCURACY</span> 98.4% ROC-AUC Churn Classifier</div>
+            <div class="ticker-item"><span class="ticker-badge">AUTOMATION</span> Automated Prescriptive Intervention Nudges</div>
+            <div class="ticker-item"><span class="ticker-badge">VOICE AI</span> Simulated Autonomous Outreach Calls</div>
+            <div class="ticker-item"><span class="ticker-badge">RETENTION</span> Instant Customer Cohort Risk Ranking</div>
+        </div>
     </div>
 
-    <!-- Modal Structure for Vapi AI Call -->
-    <div id="call-modal" class="modal hidden">
-        <div class="modal-content vapi-modal">
-            <div class="modal-header">
-                <div class="header-title-group">
-                    <span class="vapi-badge">Vapi AI Agent</span>
-                    <h2 id="modal-customer-name">Call Customer</h2>
+    <!-- Main Content Container -->
+    <main class="app-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- AI Voice Agent Call Simulator Modal -->
+    <div id="call-modal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-header-banner">
+                <div class="modal-header-title">
+                    <span>📞 Autonomous AI Call Simulation</span>
+                    <div class="audio-waveform-visualizer">
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                        <div class="waveform-bar"></div>
+                    </div>
                 </div>
-                <span class="close-modal">&times;</span>
+                <button class="close-modal-btn" id="close-modal">&times;</button>
             </div>
-            
-            <!-- Vapi Credentials & Setup section -->
-            <div class="vapi-config-box">
-                <div class="config-header" id="config-toggle">
-                    <span>⚙️ Vapi AI Connection Settings</span>
-                    <span class="toggle-icon" id="toggle-icon">▼</span>
-                </div>
-                <div class="config-body hidden" id="config-body">
-                    <div class="input-group">
-                        <label for="vapi-public-key">Vapi Public Key:</label>
-                        <input type="password" id="vapi-public-key" placeholder="Paste your Vapi Public Key (e.g. 12345678-abcd...)" />
-                    </div>
-                    <div class="input-group">
-                        <label for="vapi-assistant-id">Vapi Assistant ID:</label>
-                        <input type="text" id="vapi-assistant-id" placeholder="Paste your Vapi Assistant ID (e.g. 87654321-dcba...)" />
-                    </div>
-                    <button class="btn secondary-btn save-vapi-config-btn" id="save-vapi-config">Save Credentials</button>
-                </div>
-            </div>
-
-            <div class="modal-body">
-                <div id="modal-customer-info" class="customer-info-card">
-                    <!-- Customer details injected here -->
-                </div>
-
-                <!-- Call Control & Status Bar -->
-                <div class="call-controls-bar">
-                    <div class="call-status-indicator" id="call-status-indicator">
-                        <span class="status-dot idle" id="status-dot"></span>
-                        <span id="call-status-text">Connecting to Vapi AI Voice Agent...</span>
-                    </div>
-                    <div class="call-action-btns">
-                        <button id="start-vapi-call-btn" class="btn vapi-start-btn hidden">
-                            📞 Start Call
-                        </button>
-                        <button id="stop-vapi-call-btn" class="btn vapi-stop-btn">
-                            ⏹️ End Call
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Audio Visualizer / Pulse Animation -->
-                <div class="voice-pulse-container hidden" id="voice-pulse-container">
-                    <div class="pulse-ring"></div>
-                    <div class="pulse-ring delay"></div>
-                    <div class="mic-icon">🎙️</div>
-                </div>
-
-                <!-- Live Transcript Area -->
-                <div class="transcript-container" id="modal-transcript">
-                    <!-- Live conversation transcripts injected here -->
-                </div>
+            <div class="modal-body-content" id="modal-transcript">
+                <!-- Live call transcript injected dynamically -->
             </div>
         </div>
     </div>
 
+    <!-- Custom JS -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
