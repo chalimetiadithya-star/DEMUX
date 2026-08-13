@@ -1,33 +1,58 @@
 {% extends "base.html" %}
 
 {% block content %}
-<header class="header">
-    <h1>Top At-Risk Customers</h1>
-    <p>Detailed list of customers with high churn probability and recommended interventions.</p>
-</header>
-
-<section class="results-section" id="results-section">
-    <div class="card table-card full-width" style="margin-bottom: 24px;">
-        <div class="table-container">
-            <table class="styled-table premium-table">
-                <thead>
-                    <tr>
-                        <th>USER</th>
-                        <th>RISK SCORE</th>
-                        <th>LAST ACTIVE</th>
-                        <th>REASON(S)</th>
-                        <th>RECOMMENDED ACTION</th>
-                    </tr>
-                </thead>
-                <tbody id="high-risk-users">
-                    <!-- High risk users injected here -->
-                </tbody>
-            </table>
-        </div>
+<!-- Customers Header -->
+<section class="hero-section" style="margin-bottom: 32px;">
+    <div class="hero-pill-badge">
+        <span>🚨 HIGH PRIORITY CUSTOMER RETENTION COHORT</span>
     </div>
-    
-    <div class="action-buttons">
-        <button class="btn primary-btn" id="export-btn">Export Action List (.csv)</button>
-    </div>
+    <h1 class="hero-title" style="font-size: 2.75rem;">
+        At-Risk Customers
+    </h1>
+    <p class="hero-subtitle">
+        Ranked list of users with highest predicted churn probability. Click "Call Customer" to launch an AI Voice Agent outreach simulation.
+    </p>
 </section>
+
+<!-- Filter & Search Controls Bar -->
+<div class="table-filter-bar">
+    <div class="search-box-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-input" placeholder="Filter by User ID, Name, or Reason...">
+    </div>
+    <div class="filter-pills-group">
+        <button class="filter-pill-btn active" data-filter="all">All Risk Playbooks</button>
+        <button class="filter-pill-btn" data-filter="Support">Frustrated / Support</button>
+        <button class="filter-pill-btn" data-filter="Billing">Price Sensitive / Billing</button>
+        <button class="filter-pill-btn" data-filter="Engagement">Low Engagement</button>
+    </div>
+</div>
+
+<!-- Table Card Container -->
+<div class="table-card-wrapper">
+    <div class="table-responsive">
+        <table class="framer-table">
+            <thead>
+                <tr>
+                    <th>USER IDENTIFIER</th>
+                    <th>CHURN PROBABILITY</th>
+                    <th>TENURE & ACTIVITY</th>
+                    <th>PRIMARY REASON(S)</th>
+                    <th>RECOMMENDED INTERVENTION</th>
+                </tr>
+            </thead>
+            <tbody id="high-risk-users">
+                <!-- Injected dynamically by app.js -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div style="display: flex; justify-content: center; gap: 16px; margin-top: 24px;">
+    <button class="btn-secondary" id="export-btn">
+        <span>📥</span>
+        <span>Export Action List (.csv)</span>
+    </button>
+</div>
 {% endblock %}

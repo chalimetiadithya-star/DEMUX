@@ -1,25 +1,96 @@
 {% extends "base.html" %}
 
 {% block content %}
-<header class="header">
-    <h1>Churn Prediction Engine</h1>
-    <p>Upload your customer dataset (CSV) to analyze churn risk using our Machine Learning model.</p>
-</header>
+<!-- Hero Header Section -->
+<section class="hero-section">
+    <div class="hero-pill-badge">
+        <span>⚡ DONE-FOR-YOU PREDICTIVE ANALYTICS</span>
+    </div>
+    <h1 class="hero-title">
+        Predict & Stop Customer Churn <br>
+        <span class="accent-green">Before It Happens.</span>
+        <span class="handwritten-annotation">Powered by AI ✨</span>
+    </h1>
+    <p class="hero-subtitle">
+        Upload your customer telemetry CSV to run our Machine Learning pipeline. Instantly calculate risk probability scores, identify churn drivers, and trigger automated intervention plans.
+    </p>
+</section>
 
-<main>
-    <section class="upload-section" id="upload-section">
-        <form id="upload-form" enctype="multipart/form-data">
-            <div class="file-drop-area" id="file-drop-area">
-                <span class="file-msg">Drag & Drop your CSV file here, or click to browse</span>
-                <input class="file-input" type="file" name="file" id="file" accept=".csv" required>
-            </div>
-            <button type="submit" class="btn primary-btn" id="analyze-btn" disabled>Analyze Data</button>
-        </form>
-    </section>
+<!-- Upload Card & Drag-Drop Section -->
+<section class="upload-card" id="upload-section">
+    <form id="upload-form" enctype="multipart/form-data">
+        <div class="file-dropzone" id="file-dropzone">
+            <div class="upload-icon-circle">📂</div>
+            <div class="dropzone-text" id="dropzone-text">Drag & Drop your CSV dataset here</div>
+            <div class="dropzone-subtext" id="dropzone-subtext">or click anywhere to browse files on your computer (.csv)</div>
+            <input class="file-input-hidden" type="file" name="file" id="file" accept=".csv" required>
+        </div>
+        
+        <button type="submit" class="btn-primary" id="analyze-btn" disabled>
+            <span>ANALYZE DATASET NOW</span>
+            <span>➔</span>
+        </button>
+    </form>
 
-    <section class="loading-section hidden" id="loading-section">
-        <div class="spinner"></div>
-        <p>The AI is currently processing your data and training the model. This may take a few moments...</p>
-    </section>
-</main>
+    <!-- Quick Load Sample Datasets Bar -->
+    <div class="sample-datasets-section">
+        <div class="sample-title">
+            <span>⚡ Don't have a CSV handy? Try 1-Click Sample Datasets:</span>
+        </div>
+        <div class="sample-grid">
+            <button type="button" class="sample-btn" data-sample="dataset_1_startup.csv">
+                <span>🚀 Startup Cohort</span>
+                <span class="sample-badge">1,000 rows</span>
+            </button>
+            <button type="button" class="sample-btn" data-sample="dataset_4_growth.csv">
+                <span>📈 Growth SaaS</span>
+                <span class="sample-badge">3,000 rows</span>
+            </button>
+            <button type="button" class="sample-btn" data-sample="dataset_2_enterprise.csv">
+                <span>🏢 Enterprise B2B</span>
+                <span class="sample-badge">5,000 rows</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Loading Neural Radar Scanning Overlay (Initially Hidden) -->
+<section class="neobrutal-card loading-box hidden" id="loading-section">
+    <div class="radar-spinner"></div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Processing Telemetry & Training ML Model...</h2>
+    <p style="color: var(--text-muted-dark); max-width: 500px; margin: 0 auto 16px;">
+        Extracting user login frequency, payment failures, support tickets, and sentiment scores...
+    </p>
+    <div class="hero-pill-badge" style="margin-bottom: 0;">
+        <span class="status-dot"></span>
+        <span>STANDBY • GENERATING RISK REPORT</span>
+    </div>
+</section>
+
+<!-- Feature Showcase Grid -->
+<section class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon-badge">🧹</div>
+        <h3 class="feature-title">Automated Cleaning</h3>
+        <p class="feature-desc">Deduplicates rows, imputes missing telemetry medians, and normalizes quantile feature distributions automatically.</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon-badge">🌲</div>
+        <h3 class="feature-title">Random Forest ML</h3>
+        <p class="feature-desc">Trains an ensemble classifier with 100 decision trees to evaluate churn probabilities with precision metrics.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon-badge">🎯</div>
+        <h3 class="feature-title">Prescriptive Actions</h3>
+        <p class="feature-desc">Maps customer risk flags (support complaints vs billing friction) to exact high-impact retention playbooks.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon-badge">📞</div>
+        <h3 class="feature-title">AI Voice Outreach</h3>
+        <p class="feature-desc">Simulates autonomous AI voice agent calls to proactively resolve customer complaints before account cancellation.</p>
+    </div>
+</section>
 {% endblock %}

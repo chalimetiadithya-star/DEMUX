@@ -67,5 +67,24 @@ def upload_file():
     else:
         return jsonify({'error': 'Invalid file type. Please upload a CSV.'}), 400
 
+@app.route('/upload_sample/<filename>', methods=['POST'])
+def upload_sample(filename):
+    allowed_samples = ['sample_data.csv', 'dataset_1_startup.csv', 'dataset_2_enterprise.csv', 'dataset_3_midmarket.csv', 'dataset_4_growth.csv', 'dataset_5_legacy.csv']
+    if filename not in allowed_samples:
+        return jsonify({'error': 'Invalid sample dataset requested'}), 400
+    
+    filepath = os.path.join(os.path.dirname(__file__), filename)
+    if not os.path.exists(filepath):
+        return jsonify({'error': 'Sample file not found'}), 404
+        
+    try:
+        report = run_pipeline(filepath)
+        if report is None:
+            return jsonify({'error': 'Pipeline failed to process the dataset'}), 500
+        return jsonify(report), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
