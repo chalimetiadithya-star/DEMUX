@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="header">
+    <h1>Churn Prediction Engine</h1>
+    <p>Upload your customer dataset (CSV) to analyze churn risk using our Machine Learning model.</p>
+</header>
+
+<main>
+    <section class="upload-section" id="upload-section">
+        <form id="upload-form" enctype="multipart/form-data">
+            <div class="file-drop-area" id="file-drop-area">
+                <span class="file-msg">Drag & Drop your CSV file here, or click to browse</span>
+                <input class="file-input" type="file" name="file" id="file" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn primary-btn" id="analyze-btn" disabled>Analyze Data</button>
+        </form>
+    </section>
+
+    <section class="loading-section hidden" id="loading-section">
+        <div class="spinner"></div>
+        <p>The AI is currently processing your data and training the model. This may take a few moments...</p>
+    </section>
+</main>
+{% endblock %}

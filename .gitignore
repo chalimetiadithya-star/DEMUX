@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+.venv/
+uploads/
+churn_report.json
+.DS_Store
+mingit.zip
+repo.zip
+
